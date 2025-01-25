@@ -1,21 +1,28 @@
 package wordle.demo.rooms;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+import wordle.demo.stompController.ClientMessage;
+import wordle.demo.stompController.Events;
+import wordle.demo.stompController.ServerMessage;
 
-@Controller
 public class RoomController {
 
-    @Autowired
-    private RoomService roomService;
+    private final RoomService roomService;
 
-    @GetMapping("/")
-    public String index(Model model) {
-        model.addAttribute("rooms", roomService.getAll());
-        return "index";
+    public RoomController(RoomService roomService) {
+        this.roomService = roomService;
+    }
+
+    public ServerMessage createRoom(ClientMessage clientMessage) {
+
+        Room newRoom = new Room();
+        newRoom.setPassword(clientMessage.getPassword());
+        newRoom.setPeopleAmount(0);
+        roomService.save(newRoom);
+
+        ServerMessage serverMessage = new ServerMessage();
+        serverMessage.setRoomId(newRoom.getId());
+        serverMessage.setEvent(Events.ROOM_CREATED);
+
+        return serverMessage;
     }
 }
