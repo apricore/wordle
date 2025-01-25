@@ -1,0 +1,11 @@
+WEBSOCKET ws://localhost:8080/
+Content-Type: application/json // used only for IDE highlighting.
+// Highlighting is applied for each message independently.
+
+{
+    "action": "create-room",
+    "password": "dbsajkdnsjk"
+}
+=== wait-for-server
+
+
