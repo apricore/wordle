@@ -1,7 +1,9 @@
 package wordle.demo.rooms;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -13,7 +15,9 @@ public class RoomService {
     @Autowired
     private RoomRepository roomRepository;
 
-    public Optional<Room> getById(int id) {
+
+    @EntityGraph(attributePaths = {"users"})
+    public Optional<Room> getById(Long id) {
         return roomRepository.findById(id);
     }
 
@@ -24,5 +28,9 @@ public class RoomService {
     public Room save(Room room) {
         room.setEmptyTime(LocalDateTime.now());
         return roomRepository.save(room);
+    }
+
+    public void deleteById(Long id) {
+        roomRepository.deleteById(id);
     }
 }

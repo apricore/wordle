@@ -10,4 +10,8 @@ public class ClientMessage {
     private String action;
 
     private String password;
+
+    private String username;
+
+    private Long roomId;
 }
