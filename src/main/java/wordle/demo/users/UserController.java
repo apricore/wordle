@@ -1,7 +1,5 @@
 package wordle.demo.users;
 
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.servlet.function.ServerResponse;
 import wordle.demo.rooms.Room;
 import wordle.demo.rooms.RoomService;
 import wordle.demo.stompController.Actions;
@@ -36,12 +34,6 @@ public class UserController {
                 room.setPeopleAmount(room.getPeopleAmount() + 1);
 
                 serverMessage.setCode(Events.SUCCEED);
-
-                for (User user1 : userService.findAllByRoom_Id(room.getId())) {
-                    for (int i = 0; i < 100; i++) {
-                        System.out.println(user1.getUsername());
-                    }
-                }
 
                 serverMessage.getUsers().addAll(userService.findAllByRoom_Id(room.getId()));
             }else {

@@ -147,3 +147,9 @@ insert into user (room_id,state,username,id) values (?,?,?,?) [42001-232]
 2025-01-29 13:38:29.650572+13:00 jdbc[3]: exception
 org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "drop table if exists [*]user cascade "; expected "identifier"; SQL statement:
 drop table if exists user cascade  [42001-232]
+2025-01-30 11:26:25.250402+13:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "SELECT * FROM ROOM ROOM [*]ROOM"; SQL statement:
+SELECT * FROM ROOM ROOM ROOM [42000-232]
+2025-01-30 11:26:27.423906+13:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "SELECT * FROM ROOM ROOM [*]ROOM ROOM"; SQL statement:
+SELECT * FROM ROOM ROOM ROOM ROOM [42000-232]
