@@ -1,25 +1,34 @@
 package wordle.demo.users;
 
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import wordle.demo.rooms.Room;
 import wordle.demo.rooms.RoomService;
 import wordle.demo.stompController.Actions;
 import wordle.demo.stompController.ClientMessage;
 import wordle.demo.stompController.Events;
-import wordle.demo.stompController.ServerMessage;
+import wordle.demo.stompController.ServerMessageCollection;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.util.Scanner;
 
 public class UserController {
 
     UserService userService;
     RoomService roomService;
 
-    public UserController(UserService userService, RoomService roomService) {
+    public UserController( UserService userService, RoomService roomService) {
         this.userService = userService;
         this.roomService = roomService;
     }
 
-    public ServerMessage enterRoom(ClientMessage clientMessage) {
-        ServerMessage serverMessage = new ServerMessage();
-        serverMessage.setEvent(Actions.ENTER_ROOM);
+    public ServerMessageCollection enterRoom(SimpMessageHeaderAccessor headerAccessor, ClientMessage clientMessage) {
+        ServerMessageCollection serverMessageCollection = new ServerMessageCollection();
+        serverMessageCollection.setEvent(Actions.ENTER_ROOM);
 
         if (roomService.getById(clientMessage.getRoomId()).isPresent()) {
 
@@ -28,20 +37,79 @@ public class UserController {
                 User user = new User();
                 user.setUsername(clientMessage.getUsername());
                 user.setRoomId(room.getId());
-                user.setState("whatever");
+                user.setState(new String());
+                user.setSessionId(headerAccessor.getSessionId());
                 userService.save(user);
 
                 room.setPeopleAmount(room.getPeopleAmount() + 1);
 
-                serverMessage.setCode(Events.SUCCEED);
+                serverMessageCollection.setCode(Events.SUCCEED);
 
-                serverMessage.getUsers().addAll(userService.findAllByRoom_Id(room.getId()));
+                serverMessageCollection.getUsers().addAll(userService.findAllByRoom_Id(room.getId()));
             }else {
-                serverMessage.setCode(Events.FAILED);
+                serverMessageCollection.setCode(Events.FAILED);
             }
         }else {
-            serverMessage.setCode(Events.NOT_FOUND);
+            serverMessageCollection.setCode(Events.NOT_FOUND);
         }
-        return serverMessage;
+        return serverMessageCollection;
+    }
+
+    public ServerMessageCollection play(ClientMessage clientMessage) throws IOException {
+        ServerMessageCollection serverMessageCollection = new ServerMessageCollection();
+        serverMessageCollection.setEvent(Actions.LETS_PLAY);
+        if (userService.findById(clientMessage.getUserId()).isPresent()) {
+            User user = userService.findById(clientMessage.getUserId()).get();
+            user.setState(user.getState() + UserStateGiver(clientMessage.getInputWord()));
+            userService.save(user);
+            serverMessageCollection.setCode(Events.SUCCEED);
+            serverMessageCollection.setUser(user);
+            serverMessageCollection.getUsers().addAll(userService.findAllByRoom_Id(user.getRoomId()));
+        }else {
+            serverMessageCollection.setCode(Events.NOT_FOUND);
+        }
+        return serverMessageCollection;
+    }
+
+    public String UserStateGiver(String input) throws IOException {
+        char[] state = "BBBBB".toCharArray();
+        String answer = "APPLE";
+        ClassPathResource classPathResource = new ClassPathResource("static/answer");
+
+        try (Scanner scanner = new Scanner(classPathResource.getInputStream())) {
+            for (int a = 0; a < 3103; a++) { // Reads word by word
+                String word = scanner.nextLine().toUpperCase();
+                if (word.equals(input)) {
+                    char[] answerArray = answer.toCharArray();
+                    char[] wordArray = word.toCharArray();
+                    // get all of GREEN
+                    for (int i = 0; i < 5; i++) {
+                        if (answerArray[i] == wordArray[i]) {
+                            state[i] = 'G';
+                            answerArray[i] = '0';
+                        }
+                    }
+                    // get all of YELLOW
+                    for (int i = 0; i < 5; i++) {
+                        if (answerArray[i] != '0') {
+                            for (int j = 0; j < 5; j++) {
+                                if (answerArray[j] == wordArray[i]) {
+                                    state[i] = 'Y';
+                                    answerArray[j] = '0';
+                                }
+                            }
+                        }
+                    }
+                    break;
+                    // set all BLACK(gray)
+//                    for (int i = 0; i < 5; i++) {
+//                        if (answerArray[i] != '0') {
+//                            state[i] = 'B';
+//                        }
+//                    }
+                }
+            }
+        }
+        return new String(state);
     }
 }

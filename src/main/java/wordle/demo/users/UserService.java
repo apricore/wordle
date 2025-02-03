@@ -20,6 +20,10 @@ public class UserService {
         return userRepository.findAllByRoomId(roomId);
     }
 
+    public Optional<User> findBySessionId(String username) {
+        return userRepository.findBySessionId(username);
+    }
+
     public void save(User user) {
         userRepository.save(user);
     }

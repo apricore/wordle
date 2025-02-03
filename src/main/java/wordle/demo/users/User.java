@@ -25,11 +25,7 @@ public class User {
 
     private String state;
 
-//    @NotNull
-//    @ManyToOne
-////    @JsonBackReference
-//    @JoinColumn(name = "room_id", referencedColumnName = "id", nullable = false)
-//    private Room room;
+    private String sessionId;
 
     private Long roomId;
 

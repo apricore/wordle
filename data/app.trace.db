@@ -153,3 +153,15 @@ SELECT * FROM ROOM ROOM ROOM [42000-232]
 2025-01-30 11:26:27.423906+13:00 jdbc[13]: exception
 org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "SELECT * FROM ROOM ROOM [*]ROOM ROOM"; SQL statement:
 SELECT * FROM ROOM ROOM ROOM ROOM [42000-232]
+2025-02-02 17:37:33.287892+13:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "drop table if exists [*]user cascade "; expected "identifier"; SQL statement:
+drop table if exists user cascade  [42001-232]
+2025-02-02 17:37:33.341076+13:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "create table [*]user (id bigint not null, room_id bigint, session_id varchar(255), state varchar(255), username varchar(255) not null, primary key (id))"; expected "identifier"; SQL statement:
+create table user (id bigint not null, room_id bigint, session_id varchar(255), state varchar(255), username varchar(255) not null, primary key (id)) [42001-232]
+2025-02-02 17:37:33.849788+13:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "insert into [*]user (room_id,session_id,state,username,id) values (?,?,?,?,?)"; expected "identifier"; SQL statement:
+insert into user (room_id,session_id,state,username,id) values (?,?,?,?,?) [42001-232]
+2025-02-02 17:37:36.009831+13:00 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "drop table if exists [*]user cascade "; expected "identifier"; SQL statement:
+drop table if exists user cascade  [42001-232]

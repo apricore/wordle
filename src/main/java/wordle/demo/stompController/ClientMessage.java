@@ -14,4 +14,9 @@ public class ClientMessage {
     private String username;
 
     private Long roomId;
+
+    private Long userId;
+
+    private String inputWord;
+
 }

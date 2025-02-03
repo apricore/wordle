@@ -26,7 +26,7 @@ public class SeeData implements CommandLineRunner {
         roomService.save(room);
 
         User user = new User();
-        user.setState("haha");
+        user.setState(new String());
         user.setUsername("jesse");
         user.setRoomId(room.getId());
         userService.save(user);

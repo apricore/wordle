@@ -3,7 +3,7 @@ package wordle.demo.rooms;
 import wordle.demo.stompController.Actions;
 import wordle.demo.stompController.ClientMessage;
 import wordle.demo.stompController.Events;
-import wordle.demo.stompController.ServerMessage;
+import wordle.demo.stompController.ServerMessageCollection;
 
 public class RoomController {
 
@@ -14,19 +14,19 @@ public class RoomController {
         this.roomService = roomService;
     }
 
-    public ServerMessage createRoom(ClientMessage clientMessage) {
+    public ServerMessageCollection createRoom(ClientMessage clientMessage) {
 
         Room newRoom = new Room();
         newRoom.setPassword(clientMessage.getPassword());
         newRoom.setPeopleAmount(0);
         newRoom = roomService.save(newRoom);
 
-        ServerMessage serverMessage = new ServerMessage();
-        serverMessage.setRoomId(newRoom.getId());
-        serverMessage.setEvent(Actions.CREATE_ROOM);
-        serverMessage.setCode(Events.SUCCEED);
+        ServerMessageCollection serverMessageCollection = new ServerMessageCollection();
+        serverMessageCollection.setRoomId(newRoom.getId());
+        serverMessageCollection.setEvent(Actions.CREATE_ROOM);
+        serverMessageCollection.setCode(Events.SUCCEED);
 
-        return serverMessage;
+        return serverMessageCollection;
     }
 
 }

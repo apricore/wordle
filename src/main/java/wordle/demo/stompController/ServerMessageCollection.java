@@ -9,7 +9,7 @@ import java.util.List;
 
 @Setter
 @Getter
-public class ServerMessage {
+public class ServerMessageCollection {
 
     private String event;
 
@@ -18,4 +18,6 @@ public class ServerMessage {
     private Long roomId;
 
     private List<User> users = new ArrayList<>();
+
+    private User user;
 }

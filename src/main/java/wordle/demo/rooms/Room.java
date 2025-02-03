@@ -28,7 +28,5 @@ public class Room {
 
     private LocalDateTime emptyTime;
 
-//    @JsonManagedReference
-//    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<User> users;
+    private String answer;
 }
