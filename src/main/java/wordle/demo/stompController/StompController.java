@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.messaging.simp.annotation.SendToUser;
 import org.springframework.stereotype.Controller;
 import wordle.demo.rooms.RoomController;
 import wordle.demo.rooms.RoomService;
@@ -28,6 +29,12 @@ public class StompController {
         this.messagingTemplate = messagingTemplate;
     }
 
+    @MessageMapping("/sessionId")
+    @SendToUser(value = "/queue/unique")
+    public String connect(SimpMessageHeaderAccessor headerAccessor, ClientMessage clientMessage) {
+        return headerAccessor.getSessionId();
+    }
+
     @MessageMapping("/send")
     public void SingleTaskCentre(SimpMessageHeaderAccessor headerAccessor, ClientMessage clientMessage) throws IOException {
 
@@ -46,19 +53,33 @@ public class StompController {
             }
             case Actions.ENTER_ROOM: {
                 serverMessageCollection = new UserController(userService, roomService).enterRoom(headerAccessor, clientMessage);
-                users = userService.findAllByRoom_Id(clientMessage.getRoomId());
                 response.put("event", Actions.ENTER_ROOM);
                 response.put("code", serverMessageCollection.getCode());
-                response.put("users", serverMessageCollection.getUsers());
+                if (serverMessageCollection.getCode() == Events.SUCCEED) {
+                    response.put("users", serverMessageCollection.getUsers());
+                    users = userService.findAllByRoom_Id(clientMessage.getRoomId());
+                }else {
+                    messagingTemplate.convertAndSend("/queue/response-" + headerAccessor.getSessionId(), response);
+                }
                 break;
             }
             case Actions.LETS_PLAY: {
                 serverMessageCollection = new UserController(userService, roomService).play(clientMessage);
-                users = serverMessageCollection.getUsers();
+                if (serverMessageCollection.getCode() == Events.FAILED) {
+                    users.add(serverMessageCollection.getUser());
+                }else {
+                    users = serverMessageCollection.getUsers();
+                    response.put("user", serverMessageCollection.getUser());
+                }
                 response.put("event", Actions.LETS_PLAY);
                 response.put("code", serverMessageCollection.getCode());
-                response.put("user", serverMessageCollection.getUser());
                 break;
+            }
+            case Actions.LEAVE_ROOM: {
+                serverMessageCollection = new UserController(userService, roomService).leaveRoom(clientMessage);
+                response.put("event", Actions.LEAVE_ROOM);
+                response.put("code", serverMessageCollection.getCode());
+                messagingTemplate.convertAndSend("/queue/response-" + headerAccessor.getSessionId(), response);
             }
         }
         if (!users.isEmpty()) {

@@ -9,11 +9,7 @@ import wordle.demo.stompController.ClientMessage;
 import wordle.demo.stompController.Events;
 import wordle.demo.stompController.ServerMessageCollection;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
 import java.util.Scanner;
 
 public class UserController {
@@ -42,6 +38,7 @@ public class UserController {
                 userService.save(user);
 
                 room.setPeopleAmount(room.getPeopleAmount() + 1);
+                roomService.save(room);
 
                 serverMessageCollection.setCode(Events.SUCCEED);
 
@@ -60,11 +57,28 @@ public class UserController {
         serverMessageCollection.setEvent(Actions.LETS_PLAY);
         if (userService.findById(clientMessage.getUserId()).isPresent()) {
             User user = userService.findById(clientMessage.getUserId()).get();
-            user.setState(user.getState() + UserStateGiver(clientMessage.getInputWord()));
-            userService.save(user);
-            serverMessageCollection.setCode(Events.SUCCEED);
+            String state = UserStateGiver(clientMessage.getInputWord());
+            if (state.charAt(0) == '0') {
+                serverMessageCollection.setCode(Events.FAILED);
+            }else {
+                user.setState(user.getState() + state);
+                userService.save(user);
+                serverMessageCollection.setCode(Events.SUCCEED);
+            }
             serverMessageCollection.setUser(user);
             serverMessageCollection.getUsers().addAll(userService.findAllByRoom_Id(user.getRoomId()));
+        }else {
+            serverMessageCollection.setCode(Events.NOT_FOUND);
+        }
+        return serverMessageCollection;
+    }
+
+    public ServerMessageCollection leaveRoom(ClientMessage clientMessage) throws IOException {
+        ServerMessageCollection serverMessageCollection = new ServerMessageCollection();
+        serverMessageCollection.setEvent(Actions.LEAVE_ROOM);
+        if (userService.findById(clientMessage.getUserId()).isPresent()) {
+            userService.findById(clientMessage.getUserId()).ifPresent(user -> {userService.delete(user);});
+            serverMessageCollection.setCode(Events.SUCCEED);
         }else {
             serverMessageCollection.setCode(Events.NOT_FOUND);
         }
@@ -101,12 +115,8 @@ public class UserController {
                         }
                     }
                     break;
-                    // set all BLACK(gray)
-//                    for (int i = 0; i < 5; i++) {
-//                        if (answerArray[i] != '0') {
-//                            state[i] = 'B';
-//                        }
-//                    }
+                }else {
+                    state[0] = '0'; // invalid
                 }
             }
         }
