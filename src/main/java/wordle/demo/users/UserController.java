@@ -3,12 +3,14 @@ package wordle.demo.users;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import wordle.demo.rooms.Room;
+import wordle.demo.rooms.RoomController;
 import wordle.demo.rooms.RoomService;
 import wordle.demo.stompController.Actions;
 import wordle.demo.stompController.ClientMessage;
 import wordle.demo.stompController.Events;
 import wordle.demo.stompController.ServerMessageCollection;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -16,6 +18,7 @@ public class UserController {
 
     UserService userService;
     RoomService roomService;
+    Boolean validation = false;
 
     public UserController( UserService userService, RoomService roomService) {
         this.userService = userService;
@@ -57,7 +60,8 @@ public class UserController {
         serverMessageCollection.setEvent(Actions.LETS_PLAY);
         if (userService.findById(clientMessage.getUserId()).isPresent()) {
             User user = userService.findById(clientMessage.getUserId()).get();
-            String state = UserStateGiver(clientMessage.getInputWord());
+            Room room = roomService.getById(user.getRoomId()).get();
+            String state = UserStateGiver(clientMessage.getInputWord(), room.getAnswer());
             if (state.charAt(0) == '0') {
                 serverMessageCollection.setCode(Events.FAILED);
             }else {
@@ -85,15 +89,16 @@ public class UserController {
         return serverMessageCollection;
     }
 
-    public String UserStateGiver(String input) throws IOException {
+    public String UserStateGiver(String input, String answer) throws IOException {
         char[] state = "BBBBB".toCharArray();
-        String answer = "APPLE";
+
         ClassPathResource classPathResource = new ClassPathResource("static/answer");
 
         try (Scanner scanner = new Scanner(classPathResource.getInputStream())) {
             for (int a = 0; a < 3103; a++) { // Reads word by word
                 String word = scanner.nextLine().toUpperCase();
                 if (word.equals(input)) {
+                    validation = true;
                     char[] answerArray = answer.toCharArray();
                     char[] wordArray = word.toCharArray();
                     // get all of GREEN
@@ -115,8 +120,6 @@ public class UserController {
                         }
                     }
                     break;
-                }else {
-                    state[0] = '0'; // invalid
                 }
             }
         }
