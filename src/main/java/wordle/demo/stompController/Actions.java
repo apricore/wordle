@@ -9,4 +9,5 @@ public class Actions {
 
     public final static String LETS_PLAY = "input-word";
 
+    public final static String GIVE_UP = "give-up";
 }

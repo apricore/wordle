@@ -83,6 +83,24 @@ public class StompController {
                 response.put("userId", serverMessageCollection.getUser().getId());
                 users = serverMessageCollection.getUsers();
                 messagingTemplate.convertAndSend("/queue/response-" + headerAccessor.getSessionId(), response);
+                break;
+            }
+            case Actions.GIVE_UP: {
+                serverMessageCollection = new UserController(userService, roomService).giveUp(clientMessage);
+                if (serverMessageCollection.getCode() == Events.FAILED) {
+                    users.add(serverMessageCollection.getUser());
+                } else {
+                    users = serverMessageCollection.getUsers();
+                    response.put("user", serverMessageCollection.getUser());
+                }
+                response.put("event", Actions.GIVE_UP);
+                response.put("code", serverMessageCollection.getCode());
+
+                Map<String, Object> answerResponse = new HashMap<>();
+                answerResponse.put("event", Actions.GIVE_UP);
+                answerResponse.put("answer", serverMessageCollection.getAnswer());
+                answerResponse.put("user", serverMessageCollection.getUser());
+                messagingTemplate.convertAndSend("/queue/response-" + headerAccessor.getSessionId(), answerResponse);
             }
         }
         if (!users.isEmpty()) {

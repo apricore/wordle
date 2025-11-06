@@ -97,4 +97,21 @@ public class UserController {
         }
         return serverMessageCollection;
     }
+
+    public ServerMessageCollection giveUp(ClientMessage clientMessage) throws IOException {
+        ServerMessageCollection serverMessageCollection = new ServerMessageCollection();
+        if (userService.findById(clientMessage.getUserId()).isPresent()) {
+            User user = userService.findById(clientMessage.getUserId()).get();
+            Room room = roomService.getById(user.getRoomId()).get();
+            serverMessageCollection.setAnswer(room.getAnswer());
+            user.setState(user.getState() + ".");
+            userService.save(user);
+            serverMessageCollection.setCode(Events.SUCCEED);
+            serverMessageCollection.setUser(user);
+            serverMessageCollection.getUsers().addAll(userService.findAllByRoom_Id(user.getRoomId()));
+        } else {
+            serverMessageCollection.setCode(Events.NOT_FOUND);
+        }
+        return serverMessageCollection;
+    }
 }
