@@ -20,4 +20,6 @@ public class ServerMessageCollection {
     private List<User> users = new ArrayList<>();
 
     private User user;
+
+    private String answer;
 }

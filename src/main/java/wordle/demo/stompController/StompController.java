@@ -55,6 +55,7 @@ public class StompController {
                 serverMessageCollection = new UserController(userService, roomService).enterRoom(headerAccessor, clientMessage);
                 response.put("event", Actions.ENTER_ROOM);
                 response.put("code", serverMessageCollection.getCode());
+                response.put("answer", serverMessageCollection.getAnswer());
                 if (serverMessageCollection.getCode() == Events.SUCCEED) {
                     response.put("users", serverMessageCollection.getUsers());
                     users = userService.findAllByRoom_Id(clientMessage.getRoomId());

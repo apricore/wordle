@@ -44,7 +44,7 @@ public class UserController {
                 roomService.save(room);
 
                 serverMessageCollection.setCode(Events.SUCCEED);
-
+                serverMessageCollection.setAnswer(room.getAnswer());
                 serverMessageCollection.getUsers().addAll(userService.findAllByRoom_Id(room.getId()));
             }else {
                 serverMessageCollection.setCode(Events.FAILED);
