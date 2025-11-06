@@ -6,28 +6,21 @@ import wordle.demo.stompController.ClientMessage;
 import wordle.demo.stompController.Events;
 import wordle.demo.stompController.ServerMessageCollection;
 
+import java.io.IOException;
 import java.util.Random;
 import java.util.Scanner;
 
 public class RoomController {
 
     private final RoomService roomService;
-    String[] answerLib = new String[415];
+    static ClassPathResource answerLib = new ClassPathResource("static/answer");
+    static ClassPathResource wordLib = new ClassPathResource("static/lib");
     RoomKiller roomKiller;
-    String answer;
+    static int answerLength = 415;
+    static int wordsLength = 21955;
 
     public RoomController(RoomService roomService) {
         this.roomService = roomService;
-        ClassPathResource lib = new ClassPathResource("static/lib");
-        try {
-            Scanner scanner = new Scanner(lib.getInputStream());
-            for (int i = 0; i < 415; i++) {
-                answer = scanner.nextLine();
-                answerLib[i] = answer;
-            }
-        }catch (Exception e) {
-            answer = "APPLE";
-        }
     }
 
     public ServerMessageCollection createRoom(ClientMessage clientMessage) {
@@ -46,13 +39,28 @@ public class RoomController {
         return serverMessageCollection;
     }
 
-    public String randomAnswerChooser() {
-       int a = new Random().nextInt(answerLib.length);
-       answer = answerLib[a];
-       for (int i = 0; i < 10; i++) {
-           System.out.println(answer);
-       }
-       return answer.toUpperCase();
+    static public String randomAnswerChooser() {
+        String answer = "";
+        try {
+            Scanner scanner = new Scanner(answerLib.getInputStream());
+            int length = new Random().nextInt(answerLength);
+            for (int i = 0; i < length; i++) {
+                answer = scanner.nextLine();
+            }
+        } catch (Exception e) {
+            answer = "APPLE";
+        }
+        return answer.toUpperCase();
     }
 
+    static public boolean validateWord(String word) throws IOException {
+        try (Scanner scanner = new Scanner(wordLib.getInputStream())) {
+            for (int a = 0; a < wordsLength; a++) { // Reads word by word
+                if (word.equals(scanner.nextLine().toUpperCase())) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }

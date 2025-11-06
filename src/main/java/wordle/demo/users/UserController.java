@@ -18,7 +18,6 @@ public class UserController {
 
     UserService userService;
     RoomService roomService;
-    Boolean validation = false;
 
     public UserController( UserService userService, RoomService roomService) {
         this.userService = userService;
@@ -61,14 +60,20 @@ public class UserController {
         if (userService.findById(clientMessage.getUserId()).isPresent()) {
             User user = userService.findById(clientMessage.getUserId()).get();
             Room room = roomService.getById(user.getRoomId()).get();
-            String state = UserStateGiver(clientMessage.getInputWord(), room.getAnswer());
-            if (state.charAt(0) == '0') {
-                serverMessageCollection.setCode(Events.FAILED);
-            }else {
-                user.setState(user.getState() + state);
-                userService.save(user);
+
+            String inputWord = clientMessage.getInputWord().toUpperCase();
+            if (RoomController.validateWord(inputWord)) {
                 serverMessageCollection.setCode(Events.SUCCEED);
+                if (inputWord.equals(room.getAnswer())) {
+                    user.setState(user.getState() + inputWord + ".");
+                } else {
+                    user.setState(user.getState() + inputWord);
+                }
+                userService.save(user);
+            } else {
+                serverMessageCollection.setCode(Events.FAILED);
             }
+
             serverMessageCollection.setUser(user);
             serverMessageCollection.getUsers().addAll(userService.findAllByRoom_Id(user.getRoomId()));
         }else {
@@ -91,42 +96,5 @@ public class UserController {
             serverMessageCollection.setCode(Events.NOT_FOUND);
         }
         return serverMessageCollection;
-    }
-
-    public String UserStateGiver(String input, String answer) throws IOException {
-        char[] state = "BBBBB".toCharArray();
-
-        ClassPathResource classPathResource = new ClassPathResource("static/answer");
-
-        try (Scanner scanner = new Scanner(classPathResource.getInputStream())) {
-            for (int a = 0; a < 3103; a++) { // Reads word by word
-                String word = scanner.nextLine().toUpperCase();
-                if (word.equals(input)) {
-                    validation = true;
-                    char[] answerArray = answer.toCharArray();
-                    char[] wordArray = word.toCharArray();
-                    // get all of GREEN
-                    for (int i = 0; i < 5; i++) {
-                        if (answerArray[i] == wordArray[i]) {
-                            state[i] = 'G';
-                            answerArray[i] = '0';
-                        }
-                    }
-                    // get all of YELLOW
-                    for (int i = 0; i < 5; i++) {
-                        if (answerArray[i] != '0') {
-                            for (int j = 0; j < 5; j++) {
-                                if (answerArray[j] == wordArray[i]) {
-                                    state[i] = 'Y';
-                                    answerArray[j] = '0';
-                                }
-                            }
-                        }
-                    }
-                    break;
-                }
-            }
-        }
-        return new String(state);
     }
 }
