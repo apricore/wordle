@@ -80,6 +80,8 @@ public class StompController {
                 serverMessageCollection = new UserController(userService, roomService).leaveRoom(clientMessage);
                 response.put("event", Actions.LEAVE_ROOM);
                 response.put("code", serverMessageCollection.getCode());
+                response.put("userId", serverMessageCollection.getUser().getId());
+                users = serverMessageCollection.getUsers();
                 messagingTemplate.convertAndSend("/queue/response-" + headerAccessor.getSessionId(), response);
             }
         }

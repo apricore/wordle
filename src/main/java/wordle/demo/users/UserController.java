@@ -81,7 +81,11 @@ public class UserController {
         ServerMessageCollection serverMessageCollection = new ServerMessageCollection();
         serverMessageCollection.setEvent(Actions.LEAVE_ROOM);
         if (userService.findById(clientMessage.getUserId()).isPresent()) {
-            userService.findById(clientMessage.getUserId()).ifPresent(user -> {userService.delete(user);});
+            userService.findById(clientMessage.getUserId()).ifPresent(user -> {
+                userService.delete(user);
+                serverMessageCollection.setUser(user);
+            });
+            serverMessageCollection.setUsers(userService.findAllByRoom_Id(serverMessageCollection.getUser().getRoomId()));
             serverMessageCollection.setCode(Events.SUCCEED);
         }else {
             serverMessageCollection.setCode(Events.NOT_FOUND);
