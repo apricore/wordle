@@ -1,0 +1,699 @@
+* {
+  box-sizing: border-box;
+}
+html {
+  height: 100%;
+}
+body {
+  height: 100%;
+  margin: 0;
+  background-color: black;
+}
+#pager {
+  font-family: sans-serif;
+  height: 100%;
+  width: 100%;
+  max-width: 480px;
+  min-width: 360px;
+  position: fixed;
+  left: 50%;
+  transform: translate(-50%, 0);
+  background-color: white;
+  /* background-image: url("/lib/wordle-background.jpg");
+  background-position: center center;
+  background-size: cover;
+  background-repeat: no-repeat; */
+}
+#pager > div {
+  height: 100%;
+}
+#hall {
+  padding-top: 48px;
+}
+#userinfo {
+  /* border: red solid 1px; */
+  position: absolute;
+  top: 0px;
+  right: 16px;
+  height: 48px;
+  white-space: nowrap;
+  user-select: none;
+}
+#username {
+  /* border: red solid 1px; */
+  outline: none;
+  font-size: 24px;
+  line-height: 48px;
+  height: 100%;
+  display: inline-block;
+  vertical-align: top;
+}
+#username:focus {
+  text-decoration: underline;
+}
+#pen {
+  width: 24px;
+  font-family: dashicons;
+  line-height: 24px;
+  font-size: 14px;
+  height: 24px;
+  text-align: center;
+  vertical-align: top;
+  display: inline-block;
+  margin-top: 4px;
+  margin-left: -4px;
+}
+#pen::before {
+  content: "\f327";
+}
+#btns {
+  position: absolute;
+  top: calc(50% - 70px);
+  width: 100%;
+  text-align: center;
+  user-select: none;
+  color: white;
+  font-weight: 600;
+  font-size: 18px;
+}
+#btns > div {
+  height: 60px;
+  border-radius: 30px;
+  line-height: 60px;
+  width: calc(100% - 180px);
+  display: inline-block;
+  box-shadow: 0px 0px 3px 1px hsl(210, 0%, 0%, 0.2);
+}
+.createBtn {
+  background-color: hsl(210, 60%, 60%);
+}
+.createBtn:hover {
+  background-color: hsl(210, 75%, 55%);
+}
+.enterBtn {
+  background-color: hsl(145, 50%, 45%);
+}
+.enterBtn:hover {
+  background-color:  hsl(145, 45%, 40%);
+}
+#btns > div:not(#btns > div:last-child) {
+  margin-bottom: 20px;
+}
+#overlay {
+  background-color: hsl(0, 0%, 0%, 25%);
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0px;
+  left: 0px;
+  justify-content: center;
+  align-items: center;
+  display: none;
+}
+form {
+  position: relative;
+}
+#inputForm {
+  padding: 32px;
+  border-radius: 16px;
+  width: 300px;
+  background-color: white;
+  margin-bottom: 64px;
+  user-select: none;
+  box-shadow: 0px 0px 3px 1px hsl(210, 0%, 0%, 0.2);
+}
+legend {
+  text-align: center;
+  padding-bottom: 8px;
+}
+form > .closeBtn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 24px;
+  height: 24px;
+  line-height: 24px;
+}
+form > .closeBtn::before {
+  font-family: "dashicons";
+  content: "\f543";
+  display: inline-block;
+  transform: rotateZ(45deg);
+  font-size: 24px;
+}
+label {
+  line-height: 20px;
+  display: block;
+}
+.errorMessage {
+  margin: 0;
+  width: calc(100% - 80px);
+  position: relative;
+  left: 80px;
+  top: -20px;
+  min-height: 20px;
+  padding-left: 20px;
+  line-height: 20px;
+  font-size: 13px;
+  margin-bottom: -20px;
+  color: red;
+}
+input {
+  width: 100%;
+  height: 32px;
+  margin-bottom: 16px;
+  font-size: 16px;
+  border-top: none;
+  border-right: none;
+  border-left: none;
+}
+input:focus {
+  outline: none;
+}
+input[type=submit] {
+  border: none;
+  border-radius: 20px;
+  color: white;
+  margin-top: 16px;
+  height: 40px;
+  box-shadow: 0px 0px 3px 1px hsl(210, 0%, 0%, 0.2);
+}
+#room {
+  --top-height: 48px;
+  --bottom-height: 24px;
+  padding-top: var(--top-height);
+  padding-bottom: var(--bottom-height);
+  min-height: 574px;
+}
+#roomHead {
+  /* border: green solid 1px; */
+  --left-width: 80px;
+  --right-width: 80px;
+  position: absolute;
+  top: 0px;
+  width: 100%;
+  height: var(--top-height);
+  padding-left: var(--left-width);
+  padding-right: var(--right-width);
+}
+#roominfo {
+  position: absolute;
+  width: var(--left-with);
+  top: 0px;
+  left: 0px;
+  font-size: 18px;
+  padding-top: 4px;
+  user-select: none;
+}
+#roomNumber {
+  height: 22px;
+  padding-left: 28px;
+  position: relative;
+}
+#roomNumber::before {
+  font-family: dashicons;
+  content: "\f102";
+  position: absolute;
+  left: 0px;
+  width: 28px;
+  text-align: center;
+}
+#roomKey {
+  height: 22px;
+  padding-left: 28px;
+  position: relative;
+}
+#roomKey::before {
+  font-family: dashicons;
+  content: "\f112";
+  position: absolute;
+  left: 0px;
+  width: 28px;
+  text-align: center;
+}
+#nickname {
+  text-align: center;
+  line-height: 48px;
+  position: relative;
+  left: -12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  user-select: none;
+}
+#nickname::before {
+  font-family: dashicons;
+  content: "\f110";
+  vertical-align: top;
+  font-size: 20px;
+  display: inline-block;
+  width: 24px;
+}
+#menuBtn {
+  position: absolute;
+  width: 60px;
+  height: 100%;
+  top: 0px;
+  right: 0px;
+  font-size: 24px;
+  line-height: 48px;
+  user-select: none;
+  text-align: center;
+}
+#menuBtn:hover {
+  background-color: #ddd;
+}
+#menuBtn::before {
+  font-family: "dashicons";
+  content: "\f349";
+}
+#roomBody {
+  /* border: blue solid 1px; */
+  border-top: hsl(210, 25%, 75%) solid 1px;
+  position: relative;
+  height: 100%;
+}
+#group {
+  /* box-shadow: 0px -1px 0px 0px hsl(210, 25%, 75%), 0px 1px 0px 0px hsl(210, 25%, 84%); */
+  /* border: red solid 1px; */
+  width: 100%;
+  height: 108px;
+  padding-top: 4px;
+}
+#groupBody {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding-bottom: 8px;
+  display: flex;
+  height: 100%;
+  width: 100%;
+}
+.member {
+  /* border-top: red solid 1px; */
+  padding-top: 18px;
+  height: 100%;
+  position: relative;
+  flex: 1;
+}
+.memberName {
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 13px;
+  padding: 0 8px;
+  height: 18px;
+  line-height: 18px;
+  position: absolute;
+  top: 0px;
+  width: 100%;
+}
+.memberState {
+  height: 100%;
+  width: 68px;
+  margin: auto;
+}
+.give-up .memberState::after {
+  content: "Gived Up";
+  position: absolute;
+  top: 50%;
+  transform: rotateZ(-45deg);
+  font-weight: 600;
+  font-size: 16px;
+  opacity: 0.62;
+}
+.setter .memberState::after {
+  content: "Word Setter";
+  position: absolute;
+  top: 50%;
+  left: calc(50% - 38px);
+  transform: rotateZ(-45deg);
+  font-weight: 600;
+  font-size: 14px;
+  color: mediumseagreen;
+}
+.stateRow {
+  height: calc(100% / 6);
+  display: flex;
+  padding: 0px 2px;
+  justify-content: space-evenly;
+}
+.watcher .statePoint {
+  border: hsl(210, 25%, 75%) solid 1px;
+  display: inline-block;
+  width: calc(100% / 7);
+  height: 80%;
+  position: relative;
+  top: 20%;
+  border-radius: 2px;
+  font-size: 7px;
+  line-height: 10px;
+  text-align: center;
+  color: white;
+  font-weight: 600;
+}
+.watcher .statePoint.gray {
+  background-color: hsl(210, 50%, 50%);
+  border-color: transparent;
+}
+.watcher .statePoint.yellow {
+  background-color: hsl(60, 100%, 33%);
+  border-color: transparent;
+}
+.watcher .statePoint.green {
+  background-color: hsl(120, 80%, 40%);
+  border-color: transparent;
+}
+.statePoint {
+  background-color: hsl(210, 25%, 92%);
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  position: relative;
+  top: 20%;
+  border-radius: 5px;
+  font-size: 0;
+}
+.statePoint.gray {
+  background-color: hsl(210, 50%, 75%);
+}
+.statePoint.yellow {
+  background-color: hsl(50, 100%, 46%);
+}
+.statePoint.green {
+  background-color: hsl(120, 80%, 40%);
+}
+#container {
+  /* border: green solid 1px; */
+  position: relative;
+  font-size: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 314px;
+  height: calc((100% - 108px) * 0.6);
+  user-select: none;
+  color:
+}
+#container.give-up::after {
+  content: "Gived Up";
+  position: absolute;
+  top: cacl(50% - 50px);
+  transform: rotateZ(-45deg);
+  font-weight: 600;
+  font-size: 50px;
+  opacity: 0.38;
+}
+#container.setter::after {
+  content: "Word Setter";
+  position: absolute;
+  top: cacl(50% - 50px);
+  transform: rotateZ(-45deg);
+  font-weight: 600;
+  font-size: 50px;
+  color: mediumseagreen
+}
+.row {
+  white-space: nowrap;
+}
+.row.bounce {
+  position: relative;
+  animation: bounce .3s;
+}
+.cell {
+  display: inline-block;
+  background-clip: content-box;
+  border: hsl(210, 25%, 84%) solid 3px;
+  height: 46px;
+  width: 44px;
+  margin: 3px;
+  border-radius: 6px;
+  font-size: 24px;
+  text-align: center;
+  vertical-align: top;
+  line-height: 43px;
+  font-weight: 600;
+  /* box-shadow: 0px 0px 2px 0.5px hsl(210, 25%, 75%); */
+}
+.cell:focus {
+  outline: hsl(210, 50%, 62%) solid 3px;
+  outline-offset: -3px;
+}
+.cell.popup {
+  border: hsl(210, 33%, 75%) solid 3px;
+  animation: popup .2s;
+}
+.cell.flipover {
+  animation: flipover .2s;
+  transform: rotateX(90deg);
+}
+.cell.flipback {
+  animation: flipback .2s;
+}
+.cell.gray, .cell.yellow, .cell.green {
+  border: none;
+  line-height: 46px;
+}
+.cell.gray {
+  background-color: hsl(210, 50%, 75%);
+  color: white;
+}
+.cell.yellow {
+  background-color: hsl(50, 100%, 46%);
+  color: white;
+}
+.cell.green {
+  background-color: hsl(120, 80%, 40%);
+  color: white;
+}
+/* @keyframes bounce {
+  0% {left: -4px;}
+  10% {left: 4px;}
+  20% {left: -3.5px;}
+  30% {left: 3.5px;}
+  40% {left: -3px;}
+  50% {left: 3px;}
+  60% {left: -2.5px;}
+  70% {left: 2.5px;}
+  80% {left: -2px;}
+  90% {left: 2px;}
+  100% {left: -0px;}
+} */
+@keyframes bounce {
+  0% {left: -8px;}
+  10% {left: 8px;}
+  20% {left: -6px;}
+  30% {left: 6px;}
+  40% {left: -5px;}
+  50% {left: 5px;}
+  60% {left: -4px;}
+  70% {left: 4px;}
+  80% {left: -2px;}
+  90% {left: 2px;}
+  100% {left: -0px;}
+}
+@keyframes popup {
+  0% {
+    transform: scale(85%);
+  }
+  33% {
+    transform: scale(100%)
+  }
+  66% {
+    transform: scale(115%);
+  }
+  100% {
+    transform: scale(100%);
+  }
+}
+#keyboardWrapper {
+  /* padding: 24px 0px; */
+  width: 100%;
+  height: calc((100% - 108px) * 0.4);
+  display: flex;
+  align-items: center;
+}
+#keyboard {
+  /* border: red solid 1px; */
+  --gap: 5px;
+  --key-width: calc(10% - var(--gap));
+  user-select: none;
+  display: grid;
+  gap: var(--gap);
+  max-width: 480px;
+  height: 160px;
+  width: 100%;
+}
+#keyboard > div {
+  display: flex;
+  gap: var(--gap);
+  justify-content: center;
+}
+.key {
+  height: 50px;
+  background-color: hsl(210, 25%, 84%, 0.25);
+  /* backdrop-filter: blur(3px) brightness(150%) contrast(50%); */
+  /* color: white; */
+  border-radius: 4px;
+  text-align: center;
+  line-height: 50px;
+  font-family: sans-serif;
+  width: var(--key-width);
+  font-weight: 600;
+  transition: background-color .2s;
+  box-shadow: 0px 0px 2px 0.5px hsl(210, 25%, 75%);
+}
+.key.active {
+  transition: none;
+  background-color: hsl(210, 20%, 80%);
+}
+.key.backspace {
+  display: flex;
+  width: calc(15% - var(--gap));
+  align-items: center;
+  justify-content: center;
+}
+.key.enter {
+  width: calc(15% - var(--gap));
+  font-size: 14px;
+}
+.key.gray {
+  background-color: hsl(210, 50%, 75%);
+  box-shadow: 0px 0px 2px 0.5px hsl(210, 33%, 55%);
+  color: white;
+}
+.key.yellow {
+  background-color: hsl(50, 100%, 46%);
+  box-shadow: 0px 0px 2px 0.5px hsl(50, 100%, 33%);
+  color: white;
+}
+.key.green {
+  background-color: hsl(120, 80%, 40%);
+  box-shadow: 0px 0px 2px 0.5px hsl(120, 80%, 25%);
+  color: white;
+}
+.key.gray.active {
+  background-color: hsl(210, 33%, 55%);
+  box-shadow: 0px 0px 2px 0.5px hsl(210, 33%, 30%);
+}
+.key.yellow.active {
+  background-color: hsl(50, 100%, 33%);
+  box-shadow: 0px 0px 2px 0.5px hsl(50, 100%, 20%);
+}
+.key.green.active {
+  background-color: hsl(120, 80%, 25%);
+  box-shadow: 0px 0px 2px 0.5px hsl(120, 80%, 15%);
+}
+@keyframes flipover {
+  from {
+    transform: rotateX(0deg);
+  }
+  to {
+    transform: rotateX(90deg);
+  }
+}
+@keyframes flipback {
+  from {
+    transform: rotateX(90deg);
+  }
+  to {
+    transform: rotateX(0deg);
+  }
+}
+#roomFoot {
+  /* border: red solid 1px; */
+  position: absolute;
+  bottom: 0px;
+  width: 100%;
+  height: var(--bottom-height);
+}
+#menuBarWrapper {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0px;
+  right: 0px;
+  background-color: hsl(0, 0%, 0%, 25%);
+}
+#menuBar {
+  background-color: white;
+  position: absolute;
+  width: 66px;
+  height: 264px;
+  top: 0px;
+  right: 0px;
+  padding-top: 48px;
+  user-select: none;
+}
+#menuBar > .closeBtn {
+  position: absolute;
+  background-color: white;
+  top: 0px;
+  right: 0px;
+  width: 60px;
+  height: 48px;
+  line-height: 48px;
+  text-align: center;
+  overflow: hidden;
+}
+#menuBar > .closeBtn::before {
+  font-family: "dashicons";
+  content: "\f543";
+  display: inline-block;
+  transform: rotateZ(45deg);
+  font-size: 32px;
+}
+#patchRect {
+  position: absolute;
+  width: 6px;
+  height: 48px;
+  top: 0px;
+  right: 60px;
+  border-bottom-right-radius: 6px;
+  background-color: hsl(0, 0%, 0%, 25%);
+  box-shadow: -1px 0px 1px 0px hsl(120, 0%, 65%) inset;
+}
+#menuBarBody {
+  position: relative;
+  left: -174px;
+  height: 100%;
+  width: 240px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  background-color: white;
+  padding: 12px 24px;
+  border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
+  box-shadow: -2px 2px 2px 0px hsl(120, 0%, 62%);;
+}
+#menuBarBody > div {
+  height: 36px;
+  border-radius: 6px;
+  line-height: 36px;
+  width: 100%;
+  text-align: center;
+  color: white;
+  box-shadow: 0px 0px 3px 1px hsl(210, 0%, 0%, 0.2);
+}
+#setWordBtn {
+  background-color: mediumseagreen
+}
+#randomBtn {
+  background-color: hsl(200, 75%, 50%);
+}
+#giveUpBtn {
+  background-color: hsl(0, 75%, 62%);
+}
+#giveUpBtn.answered {
+  background-color: white;
+  color: mediumseagreen;
+}
+#giveUpBtn.answered::before {
+  content: "Answer: ";
+  color: black;
+}
+#exitBtn {
+  background-color: black;
+}
