@@ -12,6 +12,8 @@ import wordle.demo.stompController.ServerMessageCollection;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class UserController {
@@ -65,6 +67,7 @@ public class UserController {
             if (RoomController.validateWord(inputWord)) {
                 serverMessageCollection.setCode(Events.SUCCEED);
                 if (inputWord.equals(room.getAnswer())) {
+                    // Add '.' at the end of user state to indicate that the user has finished.
                     user.setState(user.getState() + inputWord + ".");
                 } else {
                     user.setState(user.getState() + inputWord);
@@ -104,6 +107,7 @@ public class UserController {
             User user = userService.findById(clientMessage.getUserId()).get();
             Room room = roomService.getById(user.getRoomId()).get();
             serverMessageCollection.setAnswer(room.getAnswer());
+            // Add '.' at the end of user state to indicate the user's finishing state.
             user.setState(user.getState() + ".");
             userService.save(user);
             serverMessageCollection.setCode(Events.SUCCEED);
@@ -111,6 +115,65 @@ public class UserController {
             serverMessageCollection.getUsers().addAll(userService.findAllByRoom_Id(user.getRoomId()));
         } else {
             serverMessageCollection.setCode(Events.NOT_FOUND);
+        }
+        return serverMessageCollection;
+    }
+
+    public ServerMessageCollection resetWord(ClientMessage clientMessage) throws IOException {
+        ServerMessageCollection serverMessageCollection = new ServerMessageCollection();
+        if (!userService.findById(clientMessage.getUserId()).isPresent()) {
+            serverMessageCollection.setCode(Events.NOT_FOUND);
+            return serverMessageCollection;
+        }
+
+        User user = userService.findById(clientMessage.getUserId()).get();
+        Room room = roomService.getById(user.getRoomId()).get();
+        List<User> users = new ArrayList<>(userService.findAllByRoom_Id(user.getRoomId()));
+        boolean allFinished = true;
+        if (!users.isEmpty()) for (User user1 : users) {
+            String state = user1.getState();
+            if (state.length() < 30 && !state.contains(".")) {
+                allFinished = false;
+                break;
+            }
+        }
+        serverMessageCollection.setUser(user);
+        if (!allFinished) {
+            serverMessageCollection.setCode(Events.FAILED);
+            return serverMessageCollection;
+        }
+
+        String inputWord = clientMessage.getInputWord();
+        if (inputWord != null) {
+            inputWord = inputWord.toUpperCase();
+            if (!RoomController.validateWord(inputWord)) {
+                serverMessageCollection.setCode(Events.NOT_FOUND);
+                return serverMessageCollection;
+            }
+            serverMessageCollection.setCode(Events.SUCCEED);
+            serverMessageCollection.setAnswer(inputWord);
+            serverMessageCollection.getUsers().addAll(users);
+            room.setAnswer(inputWord);
+            roomService.save(room);
+            for (User u : users) {
+                u.setState("");
+                userService.save(u);
+            }
+            // Setting '_' in user state to indicate that the user is setting the word for others to play.
+            // '.' at the end means the user is at a finished state.
+            user.setState("_.");
+            userService.save(user);
+            return serverMessageCollection;
+        }
+        inputWord = RoomController.randomAnswerChooser();
+        serverMessageCollection.setCode(Events.SUCCEED);
+        serverMessageCollection.setAnswer(inputWord);
+        serverMessageCollection.getUsers().addAll(users);
+        room.setAnswer(inputWord);
+        roomService.save(room);
+        for (User u : users) {
+            u.setState("");
+            userService.save(u);
         }
         return serverMessageCollection;
     }

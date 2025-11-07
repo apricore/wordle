@@ -312,7 +312,7 @@ create("div", {id: "pager"}, pager => {
     overlay.dismiss = () => {
       overlay.style.display = "";
     }
-    overlay.onclick = overlay.dismiss;
+//    overlay.onclick = overlay.dismiss;
     overlay.append(inputForm);
     hall.append(overlay);
   });

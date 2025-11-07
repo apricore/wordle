@@ -101,6 +101,19 @@ public class StompController {
                 answerResponse.put("answer", serverMessageCollection.getAnswer());
                 answerResponse.put("user", serverMessageCollection.getUser());
                 messagingTemplate.convertAndSend("/queue/response-" + headerAccessor.getSessionId(), answerResponse);
+                break;
+            }
+            case Actions.RESET_WORD: {
+                serverMessageCollection = new UserController(userService, roomService).resetWord(clientMessage);
+                response.put("event", Actions.RESET_WORD);
+                response.put("code", serverMessageCollection.getCode());
+                if (serverMessageCollection.getCode() == Events.SUCCEED) {
+                    users = serverMessageCollection.getUsers();
+                    response.put("answer", serverMessageCollection.getAnswer());
+                    response.put("user", serverMessageCollection.getUser());
+                } else {
+                    users.add(serverMessageCollection.getUser());
+                }
             }
         }
         if (!users.isEmpty()) {

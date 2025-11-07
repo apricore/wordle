@@ -10,4 +10,6 @@ public class Actions {
     public final static String LETS_PLAY = "input-word";
 
     public final static String GIVE_UP = "give-up";
+
+    public final static String RESET_WORD = "reset-word";
 }
