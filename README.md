@@ -3,6 +3,21 @@
 A **real-time multiplayer Wordle application** that enables multiple players to join the same room, make guesses simultaneously, and view each other’s progress live.
 This project demonstrates the integration of **WebSocket-based real-time communication** between a **Spring Boot backend** and a **JavaScript frontend**, providing an engaging and synchronized multiplayer experience.
 
+**License:** [MIT](LICENSE)
+
+## Game Preview
+
+> <img src="imgs/home-page.jpeg" alt="home page" width="190" style="vertical-align:middle; border-radius:4px;"> 
+> <img src="imgs/create-room.jpeg" alt="create room" width="190" style="vertical-align:middle; border-radius:4px;"> 
+> <img src="imgs/enter-room.jpeg" alt="enter room" width="190" style="vertical-align:middle; border-radius:4px;"> 
+> <img src="imgs/playing.jpeg" alt="playing" width="190" style="vertical-align:middle; border-radius:4px;"> 
+> <img src="imgs/give-up.png" alt="give up" width="190" style="vertical-align:middle; border-radius:4px;">  
+> <img src="imgs/finish.png" alt="finish" width="190" style="vertical-align:middle; border-radius:4px;"> 
+> <img src="imgs/menu.jpeg" alt="menu" width="190" style="vertical-align:middle; border-radius:4px;"> 
+> <img src="imgs/setting-word.jpeg" alt="setting word" width="190" style="vertical-align:middle; border-radius:4px;"> 
+> <img src="imgs/finish2.png" alt="finish2" width="190" style="vertical-align:middle; border-radius:4px;"> 
+> <img src="imgs/show-answer.png" alt="show answer" width="190" style="vertical-align:middle; border-radius:4px;">
+
 ## Project Overview
 
 The Online Multiplayer Wordle Game allows users to:
@@ -69,16 +84,3 @@ This system maintains **synchronized game states** across all connected clients,
 ## Open and Playing
 
 [http://localhost:8080/](http://localhost:8080/)
-
-## Game Preview
-
-> <img src="imgs/home-page.jpeg" alt="home page" width="190" style="vertical-align:middle; border-radius:4px;"> 
-> <img src="imgs/create-room.jpeg" alt="create room" width="190" style="vertical-align:middle; border-radius:4px;"> 
-> <img src="imgs/enter-room.jpeg" alt="enter room" width="190" style="vertical-align:middle; border-radius:4px;"> 
-> <img src="imgs/playing.jpeg" alt="playing" width="190" style="vertical-align:middle; border-radius:4px;"> 
-> <img src="imgs/give-up.png" alt="give up" width="190" style="vertical-align:middle; border-radius:4px;">  
-> <img src="imgs/finish.png" alt="finish" width="190" style="vertical-align:middle; border-radius:4px;"> 
-> <img src="imgs/menu.jpeg" alt="menu" width="190" style="vertical-align:middle; border-radius:4px;"> 
-> <img src="imgs/setting-word.jpeg" alt="setting word" width="190" style="vertical-align:middle; border-radius:4px;"> 
-> <img src="imgs/finish2.png" alt="finish2" width="190" style="vertical-align:middle; border-radius:4px;"> 
-> <img src="imgs/show-answer.png" alt="show answer" width="190" style="vertical-align:middle; border-radius:4px;">
